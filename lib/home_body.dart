@@ -20,9 +20,9 @@ var colorothers = Colors.black;
 
 var _tfcontrollertitle = TextEditingController();
 var _tfcontrollerdesc = TextEditingController();
-var _tfcontroller1 = TextEditingController();
-var _tfcontroller2 = TextEditingController();
-var _tfcontroller3 = TextEditingController();
+var _tfcontroller1 = TextEditingController(text : "0");
+var _tfcontroller2 = TextEditingController(text : "0");
+var _tfcontroller3 = TextEditingController(text : "0");
 
 var colorCollection = [
   colorpriority,
@@ -34,13 +34,19 @@ var colorCollection = [
   colorothers
 ];
 
- var s1 = int.parse(_tfcontroller1.text.replaceAll(".", ""));
- var s2 = int.parse(_tfcontroller2.text.replaceAll(".", ""));
- var s3 = int.parse(_tfcontroller3.text.replaceAll(".", ""));
+
+int tukarsaat( h, m, s) {
+  var s11 = int.parse(h.text);
+  var s22 = int.parse(m.text);
+  var s33 = int.parse(s.text);
+
+  var jawapantoseconds = (s11 * 3600) + (s22 * 60) + s33;
 
 
+  return jawapantoseconds;
 
-var jawapantoseconds = (s1 * 3600) + (s2 * 60) + s3;
+
+}
 
 class _homeBodyState extends State<homeBody> {
   void openPage(where) {
@@ -84,7 +90,6 @@ class _homeBodyState extends State<homeBody> {
                             child: TextField(
                               controller: _tfcontrollertitle,
                               style: GoogleFonts.poppins(),
-
                               decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText: "Task Name",
@@ -96,9 +101,8 @@ class _homeBodyState extends State<homeBody> {
                             padding:
                                 const EdgeInsets.only(left: 15.0, right: 15),
                             child: TextField(
-                              controller : _tfcontrollerdesc,
+                              controller: _tfcontrollerdesc,
                               style: GoogleFonts.poppins(),
-
                               decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText: "Short Description",
@@ -128,8 +132,10 @@ class _homeBodyState extends State<homeBody> {
                   onPressed: () {},
                   child: GestureDetector(
                       onTap: () {
-                        print(jawapantoseconds);
-                        openPage(countdownPage(_tfcontrollerdesc.text,_tfcontrollertitle.text,jawapantoseconds));
+                     
+
+                        openPage(countdownPage(_tfcontrollerdesc.text,
+                            _tfcontrollertitle.text, tukarsaat(_tfcontroller1, _tfcontroller2, _tfcontroller3)));
                       },
                       child: Text("Start Timer",
                           style: GoogleFonts.poppins(
@@ -173,7 +179,7 @@ class _changeTimeState extends State<changeTime> {
                         SizedBox(height: 10),
                         Container(
                           padding: const EdgeInsets.only(top: 20),
-                          height: 65,
+                          height: 75,
                           width: 65,
                           child: TextField(
                               controller: _tfcontroller1,
@@ -212,7 +218,7 @@ class _changeTimeState extends State<changeTime> {
                       SizedBox(height: 10),
                       Container(
                         padding: const EdgeInsets.only(top: 20),
-                        height: 65,
+                        height: 75,
                         width: 65,
                         child: TextField(
                             maxLength: 2,
@@ -252,7 +258,7 @@ class _changeTimeState extends State<changeTime> {
                       SizedBox(height: 10),
                       Container(
                         padding: const EdgeInsets.only(top: 20),
-                        height: 65,
+                        height: 75,
                         width: 65,
                         child: TextField(
                             maxLength: 2,

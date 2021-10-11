@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:countdown_progress_indicator/countdown_progress_indicator.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:timertask/home_body.dart';
+import 'package:timertask/main.dart';
 
 class countdownPage extends StatefulWidget {
   String title = "";
@@ -14,10 +16,10 @@ class countdownPage extends StatefulWidget {
 }
 
 class _countdownPageState extends State<countdownPage> {
+  void openPage(where){Navigator.of(context).push(MaterialPageRoute(builder : (context) => where));}
   bool _isRunning = true;
   final CountDownController _controller = CountDownController();
 
-  int _duration = 10;
 
   @override
   Widget build(BuildContext context) {
