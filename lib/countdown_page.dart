@@ -3,23 +3,81 @@ import 'package:countdown_progress_indicator/countdown_progress_indicator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:timertask/home_body.dart';
 import 'package:timertask/main.dart';
+import 'package:timertask/pages/conclusion_page.dart';
 
 class countdownPage extends StatefulWidget {
   String title = "";
   int countdowntimeinseconds = 0;
   String desc = "";
+  IconData icon;
 
-  countdownPage(this.desc, this.title, this.countdowntimeinseconds);
+  countdownPage(this.desc, this.title, this.countdowntimeinseconds, this.icon);
 
   @override
   _countdownPageState createState() => _countdownPageState();
 }
 
 class _countdownPageState extends State<countdownPage> {
-  void openPage(where){Navigator.of(context).push(MaterialPageRoute(builder : (context) => where));}
+  void openPage(where) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => where));
+  }
+
   bool _isRunning = true;
   final CountDownController _controller = CountDownController();
 
+  void openTodo(context) {
+    var dialog = AlertDialog(
+      backgroundColor: Colors.amber,
+      title: Text("Create A To-do?",
+          style: GoogleFonts.poppins(color: Colors.black)),
+      actions: [
+        TextButton(
+            onPressed: () {
+              openPage(MyApp());
+            },
+            child: Text("No", style: GoogleFonts.poppins(color: Colors.red))),
+        TextButton(
+            onPressed: () {
+              openPage(conc_page((widget.countdowntimeinseconds), widget.icon));
+            },
+            child:
+                Text("Yes", style: GoogleFonts.poppins(color: Colors.green))),
+      ],
+    );
+
+    showDialog(
+        context: context,
+        builder: (context) {
+          return dialog;
+        });
+  }
+
+  void timerStopDialog(context) {
+    var dialog = AlertDialog(
+      backgroundColor: Colors.amber,
+      title: Text("Stop The Timer",
+          style: GoogleFonts.poppins(color: Colors.black)),
+      actions: [
+        TextButton(
+            onPressed: () {
+              Navigator.of(context, rootNavigator: true).pop('dialog');
+            },
+            child: Text("No", style: GoogleFonts.poppins(color: Colors.red))),
+        TextButton(
+            onPressed: () {
+              openTodo(context);
+            },
+            child:
+                Text("Yes", style: GoogleFonts.poppins(color: Colors.green))),
+      ],
+    );
+
+    showDialog(
+        context: context,
+        builder: (context) {
+          return dialog;
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,6 +146,12 @@ class _countdownPageState extends State<countdownPage> {
                         color: Colors.black,
                         fontSize: 20,
                       ))),
+              ElevatedButton(
+                  onPressed: () {
+                    timerStopDialog(context);
+                  },
+                  child: Text("Done",
+                      style: GoogleFonts.poppins(fontWeight: FontWeight.bold)))
             ],
           ),
         ),

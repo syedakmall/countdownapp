@@ -40,7 +40,9 @@ dependencies:
   firebase_core: ^1.7.0
   flutter:
     sdk: flutter
+  flutter_advanced_drawer: ^1.2.3+1
   flutter_speed_dial: ^4.4.0+1
+  flutter_zoom_drawer: ^2.1.1
   google_fonts: ^2.1.0
   google_sign_in: ^5.1.1
   http: ^0.13.3

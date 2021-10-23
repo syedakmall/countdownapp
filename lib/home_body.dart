@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:timertask/countdown_page.dart';
 
@@ -20,33 +22,61 @@ var colorothers = Colors.black;
 
 var _tfcontrollertitle = TextEditingController();
 var _tfcontrollerdesc = TextEditingController();
-var _tfcontroller1 = TextEditingController(text : "0");
-var _tfcontroller2 = TextEditingController(text : "0");
-var _tfcontroller3 = TextEditingController(text : "0");
+var _tfcontroller1 = TextEditingController(text: "00");
+var _tfcontroller2 = TextEditingController(text: "00");
+var _tfcontroller3 = TextEditingController(text: "00");
 
-var colorCollection = [
-  colorpriority,
-  colorchores,
-  colorstudy,
-  colorwork,
-  colorgaming,
-  colorsleep,
-  colorothers
-];
+DateTime now = DateTime.now();
 
-
-int tukarsaat( h, m, s) {
+int tukarsaat(h, m, s) {
   var s11 = int.parse(h.text);
   var s22 = int.parse(m.text);
   var s33 = int.parse(s.text);
-
   var jawapantoseconds = (s11 * 3600) + (s22 * 60) + s33;
-
-
   return jawapantoseconds;
-
-
 }
+
+IconData checkIcon(p, c, s, w, g, sl, o) {
+  if (p == Colors.green) {
+    return Icons.star_border_outlined;
+  } else if (c == Colors.green) {
+    return Icons.task_alt;
+  } else if (s == Colors.green) {
+    return Icons.school_outlined;
+  } else if (w == Colors.green) {
+    return Icons.work_outlined;
+  } else if (g == Colors.green) {
+    return Icons.gamepad_outlined;
+  } else if (sl == Colors.green) {
+    return Icons.bed_outlined;
+  } else if (o == Colors.green) {
+    return CupertinoIcons.question_square;
+  } else {
+    return Icons.access_alarm;
+  }
+}
+
+String checkIcons(icon) {
+  if (icon == Icons.star_border_outlined) {
+    return "priority";
+  } else if (icon == Icons.task_alt) {
+    return "chores";
+  } else if (icon == Icons.school_outlined) {
+    return "studying";
+  } else if (icon == Icons.work_outlined) {
+    return "work";
+  } else if (icon == Icons.gamepad_outlined) {
+    return "gaming";
+  } else if (icon == Icons.bed_outlined) {
+    return "sleep";
+  } else if (icon == CupertinoIcons.question_square) {
+    return "others";
+  } else {
+    return 'else';
+  }
+}
+
+CollectionReference todos = FirebaseFirestore.instance.collection('history');
 
 class _homeBodyState extends State<homeBody> {
   void openPage(where) {
@@ -55,94 +85,132 @@ class _homeBodyState extends State<homeBody> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        color: Colors.amber,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 25),
-            Center(
-                child: Text("Set The Timer",
-                    style: GoogleFonts.poppins(
-                        fontSize: 20, fontWeight: FontWeight.bold))),
-            SizedBox(height: 25),
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.amber[700],
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(20)),
-                      ),
-                      margin: const EdgeInsets.only(left: 30, right: 30),
-                      height: 103,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              left: 15.0,
-                              right: 15,
-                            ),
-                            child: TextField(
-                              controller: _tfcontrollertitle,
-                              style: GoogleFonts.poppins(),
-                              decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: "Task Name",
-                                  hintStyle: GoogleFonts.poppins(
-                                      color: Colors.black54)),
-                            ),
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+          backgroundColor: Colors.yellow,
+          leading: IconButton(
+            icon: Icon(Icons.list_outlined, color: Colors.black),
+            onPressed: () => ZoomDrawer.of(context)!.toggle(),
+          )),
+      body: Container(
+          color: Colors.amber,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 25),
+              Center(
+                  child: Text("Set The Timer",
+                      style: GoogleFonts.poppins(
+                          fontSize: 20, fontWeight: FontWeight.bold))),
+              SizedBox(height: 25),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: SingleChildScrollView(
+                      child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.amber[700],
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(20)),
                           ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(left: 15.0, right: 15),
-                            child: TextField(
-                              controller: _tfcontrollerdesc,
-                              style: GoogleFonts.poppins(),
-                              decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: "Short Description",
-                                  hintStyle: GoogleFonts.poppins(
-                                      color: Colors.black54)),
-                            ),
-                          ),
-                        ],
-                      )),
-                )
-              ],
-            ),
-            SizedBox(height: 25),
-            Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Text("Task Type",
-                  style:
-                      GoogleFonts.poppins(color: Colors.black, fontSize: 16)),
-            ),
-            SizedBox(height: 20),
-            tasktypes(),
-            changeTime(),
-            SizedBox(height: 70),
-            Center(
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(primary: Colors.teal[300]),
-                  onPressed: () {},
-                  child: GestureDetector(
-                      onTap: () {
-                     
-
-                        openPage(countdownPage(_tfcontrollerdesc.text,
-                            _tfcontrollertitle.text, tukarsaat(_tfcontroller1, _tfcontroller2, _tfcontroller3)));
-                      },
-                      child: Text("Start Timer",
-                          style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w600)))),
-            )
-          ],
-        ));
+                          margin: const EdgeInsets.only(left: 30, right: 30),
+                          height: 103,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 15.0,
+                                  right: 15,
+                                ),
+                                child: TextField(
+                                  controller: _tfcontrollertitle,
+                                  style: GoogleFonts.poppins(),
+                                  decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: "Task Name",
+                                      hintStyle: GoogleFonts.poppins(
+                                          color: Colors.black54)),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 15.0, right: 15),
+                                child: TextField(
+                                  controller: _tfcontrollerdesc,
+                                  style: GoogleFonts.poppins(),
+                                  decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: "Short Description",
+                                      hintStyle: GoogleFonts.poppins(
+                                          color: Colors.black54)),
+                                ),
+                              ),
+                            ],
+                          )),
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(height: 25),
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Text("Task Type",
+                    style:
+                        GoogleFonts.poppins(color: Colors.black, fontSize: 16)),
+              ),
+              SizedBox(height: 20),
+              tasktypes(),
+              changeTime(),
+              SizedBox(height: 70),
+              Center(
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary: Colors.teal[300]),
+                    onPressed: () {},
+                    child: GestureDetector(
+                        onTap: () {
+                          todos.add(
+                            {
+                              'title': _tfcontrollertitle.text,
+                              'subtitle': _tfcontrollerdesc.text,
+                              'date': "${now.day}/${now.month}/${now.year}",
+                              'icon': checkIcons(checkIcon(
+                                  colorpriority,
+                                  colorchores,
+                                  colorstudy,
+                                  colorwork,
+                                  colorgaming,
+                                  colorsleep,
+                                  colorothers)),
+                              'duration': (tukarsaat(_tfcontroller1,
+                                      _tfcontroller2, _tfcontroller3) /
+                                  3600),
+                            },
+                          );
+                          openPage(countdownPage(
+                              _tfcontrollerdesc.text,
+                              _tfcontrollertitle.text,
+                              tukarsaat(_tfcontroller1, _tfcontroller2,
+                                  _tfcontroller3),
+                              checkIcon(
+                                  colorpriority,
+                                  colorchores,
+                                  colorstudy,
+                                  colorwork,
+                                  colorgaming,
+                                  colorsleep,
+                                  colorothers)));
+                        },
+                        child: Text("Start Timer",
+                            style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w600)))),
+              )
+            ],
+          )),
+    );
   }
 }
 
